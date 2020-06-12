@@ -51,7 +51,7 @@ function CreateLink(props) {
       />
       {errors.description && <p className="error-text">{errors.description}</p>}
       <input
-        type="text"
+        type="url"
         name="url"
         placeholder="The URL for the link"
         autoComplete="off"
