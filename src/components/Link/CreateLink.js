@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import useFormValidation from "../Auth/useFormValidation";
 import validateCreateLink from "../Auth/validateCreateLink";
+import { FirebaseContext } from "../../firebase";
 
 const INITIAL_STATE = {
   description: "",
@@ -8,6 +9,7 @@ const INITIAL_STATE = {
 };
 
 function CreateLink(props) {
+  const { firebase, user } = useContext(FirebaseContext);
   const { handleSubmit, handleChange, values, errors } = useFormValidation(
     INITIAL_STATE,
     validateCreateLink,
@@ -15,7 +17,25 @@ function CreateLink(props) {
   );
 
   function handleCreateLink() {
-    console.log("link created!");
+    if (!user) {
+      props.history.push("/login");
+    } else {
+      const { description, url } = values;
+      const newLink = {
+        description,
+        url,
+        postedBy: {
+          id: user.uid,
+          name: user.displayName,
+        },
+        votes: [],
+        comments: [],
+        created: Date.now(),
+      };
+
+      firebase.db.collection("links").add(newLink);
+      props.history.push("/");
+    }
   }
 
   return (
