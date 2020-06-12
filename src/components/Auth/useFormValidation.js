@@ -9,12 +9,13 @@ function useFormValidation(initialState, validate) {
     if (isSubmitting) {
       const noErrors = Object.keys(errors).length === 0;
       if (noErrors) {
-        console.log("authenticated", values);
+        console.log("authenticated");
         setSubmitting(false);
       } else {
         setSubmitting(false);
       }
     }
+    // eslint-disable-next-line
   }, [errors]);
 
   const handleChange = (event) => {
