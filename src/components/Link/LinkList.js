@@ -7,13 +7,19 @@ function LinkList(props) {
   const [links, setLinks] = useState([]);
 
   useEffect(() => {
-    getLinks();
+    const unsubscribe = getLinks();
+
+    return () => unsubscribe();
     // eslint-disable-next-line
   }, []);
 
   function getLinks() {
     // firebase.db.collection("links").get();
-    firebase.db.collection("links").onSnapshot(handleSnapshot);
+    const unsubscribe = firebase.db
+      .collection("links")
+      .onSnapshot(handleSnapshot);
+
+    return unsubscribe;
   }
 
   function handleSnapshot(snapshot) {
