@@ -8,7 +8,7 @@ function LinkItem({ link, index, showCount }) {
     <div className="flex items-start mt2">
       <div className="flex items-center">
         {showCount && <span className="gray">{index}</span>}
-        <div className="vote-button">⬆</div>
+        <div className="vote-button">▲</div>
       </div>
       <div className="ml1">
         <div>
