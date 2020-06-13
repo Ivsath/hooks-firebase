@@ -1,14 +1,35 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, withRouter } from "react-router-dom";
 import { getDomain } from "../../utils";
 import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
+import { FirebaseContext } from "../../firebase";
 
-function LinkItem({ link, index, showCount }) {
+function LinkItem({ link, index, showCount, history }) {
+  const { firebase, user } = useContext(FirebaseContext);
+
+  const handleVote = () => {
+    if (!user) {
+      history.push("/login");
+    } else {
+      const voteRef = firebase.db.collection("links").doc(link.id);
+      voteRef.get().then((doc) => {
+        if (doc.exists) {
+          const previousVotes = doc.data().votes;
+          const vote = { votedBy: { id: user.uid, name: user.displayName } };
+          const updatedVotes = [...previousVotes, vote];
+          voteRef.update({ votes: updatedVotes });
+        }
+      });
+    }
+  };
+
   return (
     <div className="flex items-start mt2">
       <div className="flex items-center">
         {showCount && <span className="gray">{index}</span>}
-        <div className="vote-button">▲</div>
+        <button type="button" className="vote-button" onClick={handleVote}>
+          ▲
+        </button>
       </div>
       <div className="ml1">
         <div>
@@ -30,4 +51,5 @@ function LinkItem({ link, index, showCount }) {
   );
 }
 
-export default LinkItem;
+// This Component isn't connected to a route so we need to use withRouter
+export default withRouter(LinkItem);
