@@ -1,11 +1,14 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "../../firebase";
+import LinkItem from "./LinkItem";
 
 function LinkList(props) {
   const { firebase } = useContext(FirebaseContext);
+  const [links, setLinks] = useState([]);
 
   useEffect(() => {
     getLinks();
+    // eslint-disable-next-line
   }, []);
 
   function getLinks() {
@@ -17,10 +20,22 @@ function LinkList(props) {
     const links = snapshot.docs.map((doc) => {
       return { id: doc.id, ...doc.data() };
     });
-    console.log({ links });
+
+    setLinks(links);
   }
 
-  return <div>LinkList</div>;
+  return (
+    <div>
+      {links.map((link, index) => (
+        <LinkItem
+          key={link.id}
+          showCount={true}
+          link={link}
+          index={index + 1}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default LinkList;
