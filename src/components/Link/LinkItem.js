@@ -22,6 +22,7 @@ function LinkItem({ link, index, showCount, history }) {
       });
     }
   };
+
   const handleDeleteLink = () => {
     const linkRef = firebase.db.collection("links").doc(link.id);
     linkRef
